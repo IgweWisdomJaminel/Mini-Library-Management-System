@@ -34,15 +34,15 @@ public class BookService {
     @CacheEvict(value = "books", key = "#bookId")
     public void deleteBookid(long bookId) {
         Book book = findBookById(bookId);
-        if (book == null) {
-            throw new MiniLibraryNotFoundException("Not found");
-        }
+            if (book == null) {
+                throw new MiniLibraryNotFoundException("Not found");
+            }
         bookRepository.deleteById(bookId);
     }
 
 
     @CachePut(value = "borrowedBooks", key = "#userId + #bookTitle")
-    public void BorrowBook(String BookTitle, long userId) {
+    public Object borrowBook(String BookTitle, long userId) {
         if (userRepository.findById(userId).isEmpty()) {
             throw new MiniLibraryNotFoundException("user not found");
         }
@@ -52,8 +52,10 @@ public class BookService {
         borrowedBooks.setBookId(bookTitle.getBookId());
         borrowedBooks.setIsbn(bookTitle.getIsbn());
         borrowedBooks.setAuthor(bookTitle.getAuthor());
-        deleteBookid(userId);
         borrowedBooksRepository.save(borrowedBooks);
+        bookRepository.deleteBookByTitle(BookTitle);
+
+        return null;
     }
 
 

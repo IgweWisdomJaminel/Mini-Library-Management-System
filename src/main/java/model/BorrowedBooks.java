@@ -4,8 +4,6 @@ package model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @Getter
 @Data
@@ -13,7 +11,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "books",uniqueConstraints = {@UniqueConstraint(name = "unigueIsbn",columnNames = "isbn")})
+@Table(name = "borrowed_books",uniqueConstraints = {@UniqueConstraint(name = "unigueIsbn",columnNames = "isbn")})
 public class BorrowedBooks {
     @Id
     @Column(name = "user_id",nullable = false, updatable = true)

@@ -3,22 +3,19 @@ package model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.http.HttpStatusCode;
 
-import static jakarta.persistence.GenerationType.AUTO;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName ="build")
 @Entity(name = "user")
 @Table(name = "user",uniqueConstraints = {@UniqueConstraint(name ="uniqueEmail",columnNames ="email")})
 public class User  {
@@ -42,6 +39,13 @@ public class User  {
     @Column(nullable = false)
     @Pattern(regexp = "[@][.com]",message = "Incorrect email")
     private String email;
+
+    public User(String fullName, int age, String address, String email) {
+        this.fullName = fullName;
+        this.age = age;
+        this.address = address;
+        this.email = email;
+    }
 }
 
 

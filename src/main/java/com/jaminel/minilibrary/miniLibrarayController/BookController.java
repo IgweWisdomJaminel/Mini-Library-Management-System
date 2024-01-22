@@ -6,17 +6,20 @@ import model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
+@RequestMapping("Books")
 public class BookController  {
 
     @Autowired
     BookService bookService;
 
 
+    @GetMapping("/borrowedBook/{bookId}/{@PathVariable")
+    public ResponseEntity<Object>borrowBook(@PathVariable Long bookId, @PathVariable String title){
+        return ResponseHandler.responseBuilder("found",HttpStatus.OK,bookService.borrowBook(title,bookId));
+    }
 
     @GetMapping("/findBookTitle/{title}")
     public ResponseEntity<Object> findBookByTitle(@PathVariable String title) {

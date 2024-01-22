@@ -1,22 +1,25 @@
 package com.jaminel.minilibrary.miniLibrarayController;
 
+import com.jaminel.minilibrary.dto.UserDto;
 import com.jaminel.minilibrary.response.ResponseHandler;
 import com.jaminel.minilibrary.service.UserService;
-import model.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/User")
 public class UserController extends UserService {
     @Autowired
     UserService userService;
 
 
     @PostMapping("/adduser")
-    public ResponseEntity<Object> addsUser(@RequestBody User user) {
-        return  ResponseHandler.responseBuilder("User added", HttpStatus.OK,userService.addUser(user));
+    public ResponseEntity<Object> addsUser(@RequestBody @Valid UserDto userDto) {
+
+        return  ResponseHandler.responseBuilder("User added", HttpStatus.OK,userService.addUser(userDto));
     }
 
     @DeleteMapping("/deleteuser/{id}")
@@ -25,8 +28,8 @@ public class UserController extends UserService {
     }
 
     @PostMapping("/updateUser/{id}")
-    public ResponseEntity<Object> updatesUser(@PathVariable long id, @RequestBody User user) {
-        return ResponseHandler.responseBuilder("User was updated", HttpStatus.OK, userService.updateUser(id, user));
+    public ResponseEntity<Object> updatesUser(@PathVariable long id, @RequestBody @Valid UserDto userDto) {
+        return ResponseHandler.responseBuilder("User was updated", HttpStatus.OK, userService.updateUser(id, userDto));
 
     }
 

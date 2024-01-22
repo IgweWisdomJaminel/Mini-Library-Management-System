@@ -1,13 +1,16 @@
 package com.jaminel.minilibrary.service;
 
+import com.jaminel.minilibrary.dto.UserDto;
 import com.jaminel.minilibrary.repository.UserRepository;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -16,51 +19,48 @@ public class UserService {
     UserRepository userRepository;
 
 
-    @CachePut(value = "users", key = "#user.id")
-    public User addUser(User user) {
+    @CachePut(value = "User", key = "#user.id")
+    public User addUser(UserDto userDto)
+    {User user = UserDto.build(userDto.getFullName(), userDto.getAge(),userDto.getAddress(),userDto.getEmail());
         return userRepository.save(user);
     }
 
 
-    @CacheEvict(value = "users", key = "#id")
-    public Object deleteUser(long id) {
+    @CacheEvict(value = "User", key = "#id")
+    public Map<String,String> deleteUser(long id) {
         userRepository.deleteById(id);
-        return null;
+        return Map.of("message","User Deleted");
     }
 
 
-    @CachePut(value = "users", key = "#id")
-    public String updateUser(long id, User user) {
-        User toUpdate = findUserById(id);
-        toUpdate.setAge(user.getAge());
-        toUpdate.setEmail(user.getEmail());
-        toUpdate.setAddress(user.getAddress());
-        toUpdate.setFullName(user.getFullName());
-        userRepository.save(toUpdate);
-        return "User updated sucessfully";
+    @CachePut(value = "User", key = "#id")
+    public User updateUser(long id, UserDto userDto) {
+        User toUpdate = userRepository.findUserByUserId(id);
+     toUpdate =UserDto.build(userDto.getFullName(), userDto.getAge(),userDto.getAddress(),userDto.getEmail());
+        return userRepository.save(toUpdate);
     }
 
 
-    @CachePut(value = "users", key = "#userId")
+    @CachePut(value = "User", key = "#userId")
     public User findUserById(long userId) {
         return userRepository.findById(userId).orElse(null);
     }
 
 
-    @CachePut(value = "users", key = "#email")
+    @CachePut(value = "User", key = "#email")
     public String findUserByEmail(String email) {
         userRepository.findUserByEmail(email);
         return "User Id found";
     }
 
 
-    @CachePut(value = "users", key = "#fullName")
+    @CachePut(value = "User", key = "#fullName")
     public User getUsersBYFullName(String fullName) {
         return userRepository.getUserByFullName(fullName);
     }
 
 
-    @CachePut(value = "users", key = "all")
+    @Cacheable("User")
     public List<User> listAllUsers() {
         return userRepository.findAll();
     }
