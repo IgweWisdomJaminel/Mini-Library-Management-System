@@ -26,5 +26,8 @@ public class BorrowedBooks {
     @Pattern(regexp = "[a-z]{3}-[0-9]{3}")
     @Column(name = "isbn",nullable = false)
     private String isbn;
+    @OneToOne//(cascade = CascadeType.ALL)
+    @JoinColumn(name = ("user_id"))
+    User users;
 
 }
